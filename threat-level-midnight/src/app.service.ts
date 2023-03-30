@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-const { Configuration, OpenAIApi } = require("openai");
+import { GptPrompt, ThreatDto } from './app.controller';
+import { Configuration, OpenAIApi } from 'openai';
 
 @Injectable()
 export class AppService {
@@ -19,19 +20,30 @@ export class AppService {
     };
   }
 
-  async getThreatLevel(prompt: string) : Promise<any> {
+  async getThreatLevel(prompt: GptPrompt) : Promise<ThreatDto> {
       const configuration = new Configuration({
         apiKey: process.env.OPENAI_API_KEY,
       });
   
       const openai = new OpenAIApi(configuration);
-      const response = await openai.createCompletion({
-        model: "text-davinci-003",
-        prompt: prompt,
-        temperature: 0,
-        max_tokens: 7,
-      });
-  
-      return response.data;
+      try {
+        const response = await openai.createChatCompletion({
+          model: "gpt-4",
+          messages: [
+            {role: "system", content: `You are an analysis tool to detect threats and sentiment from email. 
+            You analyze text and return results on a scale of 1-10, where 1 is no threat, and 10 is threat of bodily harm to a person.`},
+            {role: "user", content: prompt.getGptPrompt()}
+          ]
+        });
+
+        const choices = response.data.choices;
+        const message = choices[0].message;
+
+        const json : ThreatDto = JSON.parse(message.content);
+        return json;
+
+      } catch (error) {
+        console.log(error);
+      }
   }
 }
