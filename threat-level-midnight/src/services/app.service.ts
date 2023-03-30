@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { GptPrompt, ThreatDto } from './app.controller';
+import { GptPrompt } from '../dtos/GptPrompt';
 import { Configuration, OpenAIApi } from 'openai';
+import { ThreatDto } from '../dtos/ThreatDto';
 
 @Injectable()
 export class AppService {
@@ -30,8 +31,8 @@ export class AppService {
         const response = await openai.createChatCompletion({
           model: "gpt-4",
           messages: [
-            {role: "system", content: `You are an analysis tool to detect threats and sentiment from email. 
-            You analyze text and return results on a scale of 1-10, where 1 is no threat, and 10 is threat of bodily harm to a person.`},
+            {role: "system", content: `you are an analysis tool that scans text and assesses physical threat levels as well as general sentiment
+            that rates on a scale of 1-10 and provides a one sentence reasoning as well as a one word general sentiment returned in json format with threat-rating, reason, and sentiment.`},
             {role: "user", content: prompt.getGptPrompt()}
           ]
         });
