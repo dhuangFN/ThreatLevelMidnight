@@ -5,11 +5,18 @@
 
   <div>
     <label for="prompt">Prompt</label>
-    <textarea type="text" id="prompt" name="prompt" value.bind="prompt" rows="10" cols="50"></textarea> 
+    <br />
+    <textarea type="text" id="prompt" name="prompt" value.bind="prompt" style="width: 50%, height 20%"></textarea> 
   </div>
   <button class="vv-btn-primary" click.trigger="doStuff()" type="button">Submit</button>
 
-  
+  <div if.bind="result">
+      <hr />
+      <p>Threat: ${result["threat-rating"]}</p>
+      <p>Reason: ${result.reason}</p>
+      <p>Sentiment: ${result.sentiment}</p>
+  </div>
+
 <!--   
   <vv-input-fieldset name="prompt"></vv-input-fieldset>
   <vv-button type="primary">Submit</vv-button> -->
