@@ -21,6 +21,18 @@ export class App {
     return item && item.result["threat-rating"] == 10;
   }
 
+  showGreen(item){
+    return item && item.result["threat-rating"] <= 3;
+  }
+
+  showYellow(item){
+    return item && item.result["threat-rating"] >= 4 && item.result["threat-rating"] <= 7;
+  }
+
+  showRed(item){
+    return item && item.result["threat-rating"] >= 8 && item.result["threat-rating"] <= 10;
+  }
+
   assessThreat(){
     
     const url = 'http://localhost:3000';
