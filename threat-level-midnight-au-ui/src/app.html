@@ -8,18 +8,15 @@
       <vv-textarea placeholder="Paste the content you would like to threat check here..." class="w-full block" name="prompt" value.two-way="prompt"></vv-textarea>
     </vv-card-body>
     <vv-card-footer>
-      
-  <vv-button type="primary" class="inline float-right mb-2" click.trigger="assessThreat()">Submit</vv-button>
+      <vv-button type="primary" class="inline float-right mb-2" click.trigger="assessThreat()">Submit</vv-button>
     </vv-card-footer>
   </vv-card>
 
-  <vv-card if.bind="isLoading || result" class="w-1/2 ml-4 mb-4">
+  <vv-button if.bind="history && history.length" type="secondary" class="inline-block ml-2 mb-2" click.trigger="clearHistory()">Clear History</vv-button>
+  <vv-card if.bind="isLoading" class="w-1/2 ml-4 mb-4">
     <vv-card-header>
       <div if.bind="isLoading" class="w-28">Loading...         
         <vv-spinner-loader class="float-right mt-1"></vv-spinner-loader>
-      </div>
-      <div if.bind="result && !isLoading">
-        Assessment
       </div>
     </vv-card-header>
     <vv-card-body>
@@ -28,16 +25,26 @@
         <vv-skeleton-loader class="h-8 p-2 mb-1 w-1/3"></vv-skeleton-loader>
         <vv-skeleton-loader class="h-8 p-2 mb-1 w-40"></vv-skeleton-loader>
       </div>
-      
-      <div if.bind="result && !isLoading">
-        <p if.bind="isImminentThreat()">
+    </vv-card-body>
+  </vv-card>
+
+  <vv-card repeat.for="item of history" class="w-1/2 ml-4 mb-4">
+    <vv-card-header>Result
+    </vv-card-header>
+    <vv-card-body>
+      <div>
+        <p>Content: ${item.content}</p>
+        <hr />
+        <p if.bind="isImminentThreat(item)">
           <img src="../static/threat-level-midnight.gif" />
         </p>
-        <p>Threat: ${result["threat-rating"]}</p>
-        <p>Reason: ${result.reason}</p>
-        <p>Sentiment: ${result.sentiment}</p>
+        <p>Threat: ${item.result["threat-rating"]}</p>
+        <p>Reason: ${item.result.reason}</p>
+        <p>Sentiment: ${item.result.sentiment}</p>
       </div>
     </vv-card-body>
+    <vv-card-footer>
+    </vv-card-footer>
   </vv-card>
 
 </div>

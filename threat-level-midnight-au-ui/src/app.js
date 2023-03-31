@@ -1,10 +1,24 @@
 export class App {
   message = 'Hello World!';
   prompt;
-  result;
+  history= [];
 
-  isImminentThreat(){
-    return this.result && this.result["threat-rating"] == 10;
+  attached(){
+    const history = window.localStorage.getItem("history");
+    this.history = history ? JSON.parse(history) : [];
+  }
+
+  storeHistory(){
+    window.localStorage.setItem('history', JSON.stringify(this.history));
+  }
+
+  clearHistory(){
+    this.history = [];
+    window.localStorage.clear();
+  }
+
+  isImminentThreat(item){
+    return item && item.result["threat-rating"] == 10;
   }
 
   assessThreat(){
@@ -17,7 +31,6 @@ export class App {
     const bodyData = JSON.stringify({
       prompt: this.prompt
     });
-
     this.isLoading = fetch(url, {
       method: method,
       headers: headers,
@@ -30,8 +43,11 @@ export class App {
         return response.json();
       })
       .then((data) => {
-        this.result = data;
-        console.log(data);
+        this.history.unshift({
+          content: this.prompt,
+          result: data
+        });
+        this.storeHistory();
         this.isLoading = null;
       })
       .catch((error) => {
