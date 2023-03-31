@@ -33,8 +33,8 @@
     </vv-card-header>
     <vv-card-body>
       <div>
-        <p>Content: ${item.content}</p>
-        <hr />
+        <p>Content: <span class="text-fn-purple italic">${item.content}</span> </p>
+        <hr class="mb-2" />
         <p if.bind="isImminentThreat(item)">
           <img src="../static/threat-level-midnight.gif" />
         </p>
