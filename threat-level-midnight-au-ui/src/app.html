@@ -1,23 +1,44 @@
 <template>
-  <require from="./resources/external/vv-components.style.css"></require>
+  <require from="./resources/external/vv-components.style.css"></require>  
+  <div class="p-4">
+  <h1>Threat Level Midnight</h1>
+  <vv-card class="w-1/2 ml-4 mb-4">
+    <vv-card-header>Content</vv-card-header>
+    <vv-card-body>
+      <vv-textarea placeholder="Paste the content you would like to threat check here..." class="w-full block" name="prompt" value.two-way="prompt"></vv-textarea>
+    </vv-card-body>
+    <vv-card-footer>
+      
+  <vv-button type="primary" class="inline float-right mb-2" click.trigger="assessThreat()">Submit</vv-button>
+    </vv-card-footer>
+  </vv-card>
 
-  <h1>${message}</h1>
+  <vv-card if.bind="isLoading || result" class="w-1/2 ml-4 mb-4">
+    <vv-card-header>
+      <div if.bind="isLoading" class="w-28">Loading...         
+        <vv-spinner-loader class="float-right mt-1"></vv-spinner-loader>
+      </div>
+      <div if.bind="result && !isLoading">
+        Assessment
+      </div>
+    </vv-card-header>
+    <vv-card-body>
+      <div if.bind="isLoading" class="w-full">
+        <vv-skeleton-loader class="h-8 p-2 mb-1 w-28"></vv-skeleton-loader>
+        <vv-skeleton-loader class="h-8 p-2 mb-1 w-1/3"></vv-skeleton-loader>
+        <vv-skeleton-loader class="h-8 p-2 mb-1 w-40"></vv-skeleton-loader>
+      </div>
+      
+      <div if.bind="result && !isLoading">
+        <p if.bind="isImminentThreat()">
+          <img src="../static/threat-level-midnight.gif" />
+        </p>
+        <p>Threat: ${result["threat-rating"]}</p>
+        <p>Reason: ${result.reason}</p>
+        <p>Sentiment: ${result.sentiment}</p>
+      </div>
+    </vv-card-body>
+  </vv-card>
 
-  <div>
-    <label for="prompt">Prompt</label>
-    <br />
-    <textarea type="text" id="prompt" name="prompt" value.bind="prompt" style="width: 50%, height 20%"></textarea> 
-  </div>
-  <button class="vv-btn-primary" click.trigger="doStuff()" type="button">Submit</button>
-
-  <div if.bind="result">
-      <hr />
-      <p>Threat: ${result["threat-rating"]}</p>
-      <p>Reason: ${result.reason}</p>
-      <p>Sentiment: ${result.sentiment}</p>
-  </div>
-
-<!--   
-  <vv-input-fieldset name="prompt"></vv-input-fieldset>
-  <vv-button type="primary">Submit</vv-button> -->
+</div>
 </template>

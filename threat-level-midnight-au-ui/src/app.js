@@ -3,7 +3,11 @@ export class App {
   prompt;
   result;
 
-  doStuff(){
+  isImminentThreat(){
+    return this.result && this.result["threat-rating"] == 10;
+  }
+
+  assessThreat(){
     
     const url = 'http://localhost:3000';
     const method = 'POST';
@@ -14,7 +18,7 @@ export class App {
       prompt: this.prompt
     });
 
-    fetch(url, {
+    this.isLoading = fetch(url, {
       method: method,
       headers: headers,
       body: bodyData
@@ -28,6 +32,7 @@ export class App {
       .then((data) => {
         this.result = data;
         console.log(data);
+        this.isLoading = null;
       })
       .catch((error) => {
         console.error('There was a problem with the fetch operation:', error);
