@@ -32,7 +32,7 @@ export class AppService {
           model: "gpt-4",
           messages: [
             {role: "system", content: `you are an analysis tool that scans text and assesses physical threat levels as well as general sentiment
-            that rates on a scale of 1-10 and provides a one sentence reasoning as well as a one word general sentiment returned in json format with threat-rating, reason, and sentiment.`},
+            that provides a rating on a scale of 1-10 and provides a one sentence reasoning as well as a one word general sentiment returned in json format with threat-rating, reason, sentiment, and detected-language. Always reply in english. Format the detected-language using ("language code ISO 639"-"region code ISO 3166")`},
             {role: "user", content: prompt.getGptPrompt()}
           ]
         });

@@ -44,6 +44,7 @@
             <div class="flex">
               <vv-skeleton-loader class="h-1 py-2 mb-0.5 flex-auto"></vv-skeleton-loader>
               <vv-skeleton-loader class="h-1 py-2 pl-1 mb-0.5 flex-auto"></vv-skeleton-loader>
+              <vv-skeleton-loader class="h-1 py-2 pl-1 mb-0.5 flex-auto"></vv-skeleton-loader>
               </div>
             <vv-skeleton-loader class="h-1 p-2 mb-0.5"></vv-skeleton-loader>
           </div>
@@ -77,6 +78,7 @@
                 </span>
               </p>
               <p class="flex-auto"><span class="uni-neue-700">Sentiment: </span>${item.result.sentiment}</p>
+              <p class="flex-auto"><span class="uni-neue-700">Language: </span>${item.result["detected-language"]}</p>
             </div>
             <p><span class="uni-neue-700">Reason: </span>${item.result.reason}</p>
           </div>
