@@ -1,23 +1,93 @@
 <template>
   <require from="./resources/external/vv-components.style.css"></require>
 
-  <h1>${message}</h1>
-
-  <div>
-    <label for="prompt">Prompt</label>
-    <br />
-    <textarea type="text" id="prompt" name="prompt" value.bind="prompt" style="width: 50%, height 20%"></textarea> 
+  <div id="vv-nav-menu" style="height: 56px;" class="sticky top-0">
+    <div class="nav-wrapper nav-menu-loading">
+      <div>
+        <div class="nav-buttons p-2">
+          <div class="nav-button h-10" style="padding-top: 4px">            
+            <a href="/" style="text-decoration: none;"/>
+              <h1>Threat Level Midnight</h1>
+            </a>
+          </div>
+          <div class="nav-button">
+            <vv-button if.bind="history && history.length" type="secondary" class="inline-block ml-2"
+          click.trigger="clearHistory()">Clear History</vv-button>
+          </div>
+        </div>
+        
+      </div>
+    </div>
   </div>
-  <button class="vv-btn-primary" click.trigger="doStuff()" type="button">Submit</button>
-
-  <div if.bind="result">
-      <hr />
-      <p>Threat: ${result["threat-rating"]}</p>
-      <p>Reason: ${result.reason}</p>
-      <p>Sentiment: ${result.sentiment}</p>
+  <div class="p-4 flex">
+    <section class="flex-initial w-1/3">
+      <vv-card class=" ml-4 mb-4">
+        <vv-card-header>Content</vv-card-header>
+        <vv-card-body>
+          <vv-textarea placeholder="Paste the content you would like to threat check here..." class="w-full block"
+            name="prompt" value.two-way="prompt"></vv-textarea>
+        </vv-card-body>
+        <vv-card-footer>
+          By: Team Torment Nexus
+          <vv-button disabled.bind="isLoading" type="primary" class="inline float-right mb-2" click.trigger="assessThreat()">Submit</vv-button>
+        </vv-card-footer>
+      </vv-card>  
+    </section>
+    <section class="flex-initial w-1/3">
+      <vv-card if.bind="isLoading" class="ml-4 mb-4">
+        <vv-card-header>
+          <div if.bind="isLoading" class="w-28">Loading...
+            <vv-spinner-loader class="float-right mt-1"></vv-spinner-loader>
+          </div>
+        </vv-card-header>
+        <vv-card-body>
+          <div if.bind="isLoading" class="w-full">
+            <vv-skeleton-loader class="h-20 py-2 mb-2"></vv-skeleton-loader>
+            <div class="flex">
+              <vv-skeleton-loader class="h-1 py-2 mb-0.5 flex-auto"></vv-skeleton-loader>
+              <vv-skeleton-loader class="h-1 py-2 pl-1 mb-0.5 flex-auto"></vv-skeleton-loader>
+              <vv-skeleton-loader class="h-1 py-2 pl-1 mb-0.5 flex-auto"></vv-skeleton-loader>
+              </div>
+            <vv-skeleton-loader class="h-1 p-2 mb-0.5"></vv-skeleton-loader>
+          </div>
+        </vv-card-body>
+      </vv-card>
+  
+      <vv-card repeat.for="item of history" class="ml-4 mb-4">
+        <vv-card-header>Result
+        </vv-card-header>
+        <vv-card-body>
+          <div class="w-full">
+            <p class="mb-2 border-b-2 pb-2">
+              <span class="uni-neue-700">Content:</span> 
+              <span class="text-fn-purple italic text-sm">${item.content}</span>
+            </p>
+            <p if.bind="isImminentThreat(item)">
+              <img src="../static/threat-level-midnight.gif" />
+            </p>
+            <div class="flex">
+              <p class="flex-auto">
+                <span class="flex">
+                  <span class="flex-initial">
+                    <span class="uni-neue-700">Threat: </span>
+                    <span class="ml-2">${item.result["threat-rating"]}</span>
+                  </span>
+                  <span class="flex-initial ml-2">                    
+                    <vv-icon-check if.bind="showGreen(item)" class="text-vv-green"></vv-icon-check>
+                    <vv-icon-exclamation-circle if.bind="showYellow(item)" class="text-vv-yellow-bright"></vv-icon-exclamation-circle>
+                    <vv-icon-subtract-circle size="20" if.bind="showRed(item)" class="text-vv-red-fire"></vv-icon-subtract-circle>
+                  </span>
+                </span>
+              </p>
+              <p class="flex-auto"><span class="uni-neue-700">Sentiment: </span>${item.result.sentiment}</p>
+              <p class="flex-auto"><span class="uni-neue-700">Language: </span>${item.result["detected-language"]}</p>
+            </div>
+            <p><span class="uni-neue-700">Reason: </span>${item.result.reason}</p>
+          </div>
+        </vv-card-body>
+        <vv-card-footer>
+        </vv-card-footer>
+      </vv-card>
+    </section>
   </div>
-
-<!--   
-  <vv-input-fieldset name="prompt"></vv-input-fieldset>
-  <vv-button type="primary">Submit</vv-button> -->
 </template>
